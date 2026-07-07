@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El vacío del alquiler social — España en el contexto europeo</title>
+<meta name="description" content="Policy brief interactivo sobre el parque de vivienda social en España, comparado con la Unión Europea y desglosado por comunidad autónoma.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4f1e8;
+    --ink:#1c2620;
+    --pine:#1f3d2e;
+    --pine-deep:#152a20;
+    --ochre:#c1832f;
+    --ochre-light:#e2a94f;
+    --line:#d8d0bd;
+    --card:#faf8f1;
+    --muted:#6b6455;
+    --danger:#9c3c2e;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.55;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
+  header.hero{
+    background:linear-gradient(160deg,var(--pine) 0%,var(--pine-deep) 100%);
+    color:var(--paper);
+    padding:72px 0 56px;
+    position:relative;
+    overflow:hidden;
+  }
+  header.hero::after{
+    content:"";
+    position:absolute;
+    right:-120px;top:-120px;
+    width:420px;height:420px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(226,169,79,0.16) 0%,transparent 70%);
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ochre-light);
+    margin:0 0 18px;
+  }
+  h1.title{
+    font-family:'Source Serif 4',serif;
+    font-weight:600;
+    font-size:clamp(32px,5vw,54px);
+    line-height:1.08;
+    margin:0 0 20px;
+    max-width:820px;
+  }
+  h1.title em{font-style:italic;color:var(--ochre-light);}
+  .lede{
+    max-width:640px;
+    font-size:17px;
+    color:#dfe6df;
+    margin:0 0 34px;
+  }
+  .hero-stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:0;
+    border-top:1px solid rgba(244,241,232,0.22);
+    max-width:760px;
+  }
+  .hstat{padding:20px 24px 0;border-left:1px solid rgba(244,241,232,0.22);}
+  .hstat:first-child{border-left:none;padding-left:0;}
+  .hstat .num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:30px;
+    font-weight:700;
+    color:var(--ochre-light);
+    display:block;
+  }
+  .hstat .lab{font-size:12.5px;color:#c9d2c8;margin-top:4px;}
+
+  main{padding:56px 0 40px;}
+  section{margin-bottom:64px;}
+  .section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px;}
+  .section-head h2{
+    font-family:'Source Serif 4',serif;
+    font-size:26px;
+    font-weight:600;
+    margin:0;
+  }
+  .section-sub{color:var(--muted);font-size:14.5px;margin:0 0 26px;max-width:680px;}
+
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+  .seg-btn{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:.03em;
+    padding:8px 14px;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--ink);
+    border-radius:20px;
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .seg-btn:hover{border-color:var(--ochre);}
+  .seg-btn.active{background:var(--pine);color:var(--paper);border-color:var(--pine);}
+
+  .chart-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:26px 28px 20px;
+  }
+
+  /* EU comparison bars */
+  .eu-row{display:flex;align-items:center;gap:14px;padding:4px 0;font-size:13.5px;}
+  .eu-row.es{background:rgba(193,131,47,0.10);border-radius:4px;}
+  .eu-row.eu27{border-top:1px dashed var(--line);margin-top:6px;padding-top:10px;font-weight:600;}
+  .eu-label{width:132px;flex:0 0 132px;text-align:right;color:var(--ink);}
+  .eu-row.es .eu-label, .eu-row.eu27 .eu-label{font-weight:700;}
+  .eu-bar-track{flex:1;height:16px;background:#eae6d8;border-radius:3px;position:relative;overflow:hidden;}
+  .eu-bar-fill{height:100%;background:var(--pine);border-radius:3px;transition:width .5s ease;}
+  .eu-row.es .eu-bar-fill{background:var(--ochre);}
+  .eu-val{width:56px;flex:0 0 56px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--muted);}
+  .eu-row.es .eu-val{color:var(--danger);font-weight:700;}
+
+  /* CCAA chart */
+  .ccaa-row{display:flex;align-items:center;gap:12px;padding:5px 0;font-size:13px;cursor:pointer;}
+  .ccaa-label{width:172px;flex:0 0 172px;text-align:right;}
+  .ccaa-bar-track{flex:1;height:18px;display:flex;border-radius:3px;overflow:hidden;background:#eae6d8;}
+  .seg{height:100%;transition:width .4s ease;}
+  .seg.arrend{background:var(--pine);}
+  .seg.opcion{background:#5b7a63;}
+  .seg.venta{background:var(--ochre);}
+  .seg.otras{background:#b7a98a;}
+  .ccaa-total{width:70px;flex:0 0 70px;font-family:'JetBrains Mono',monospace;font-size:12.5px;text-align:right;color:var(--muted);}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:12px;color:var(--muted);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .swatch{width:10px;height:10px;border-radius:2px;display:inline-block;}
+
+  .tooltip{
+    position:fixed;
+    background:var(--pine-deep);
+    color:var(--paper);
+    padding:10px 14px;
+    border-radius:6px;
+    font-size:12.5px;
+    line-height:1.5;
+    pointer-events:none;
+    opacity:0;
+    transition:opacity .12s ease;
+    z-index:50;
+    max-width:240px;
+    box-shadow:0 8px 24px rgba(0,0,0,.25);
+  }
+  .tooltip strong{color:var(--ochre-light);}
+
+  /* table */
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{
+    text-align:left;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--muted);
+    border-bottom:1px solid var(--line);
+    padding:8px 10px;
+    cursor:pointer;
+    user-select:none;
+    white-space:nowrap;
+  }
+  th:hover{color:var(--pine);}
+  th .arrow{opacity:.4;font-size:10px;margin-left:3px;}
+  td{padding:8px 10px;border-bottom:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:12.5px;}
+  td.name{font-family:'Inter',sans-serif;font-size:13.5px;}
+  tr:hover td{background:rgba(193,131,47,0.06);}
+  .search-input{
+    width:100%;max-width:320px;
+    padding:9px 12px;
+    border:1px solid var(--line);
+    border-radius:5px;
+    background:var(--paper);
+    font-family:'Inter',sans-serif;
+    font-size:13.5px;
+    margin-bottom:14px;
+  }
+
+  .callout{
+    background:var(--card);
+    border-left:3px solid var(--ochre);
+    padding:16px 20px;
+    font-size:14px;
+    border-radius:0 6px 6px 0;
+    margin-top:22px;
+  }
+
+  footer.brief-foot{
+    border-top:1px solid var(--line);
+    padding:32px 0 56px;
+    font-size:12.5px;
+    color:var(--muted);
+  }
+  footer.brief-foot h3{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--ink);
+    margin:0 0 10px;
+  }
+  footer.brief-foot ul{margin:0 0 20px;padding-left:18px;}
+  footer.brief-foot a{color:var(--pine);}
+
+  @media (max-width:640px){
+    .eu-label,.ccaa-label{width:96px;flex:0 0 96px;font-size:11.5px;}
+    .ccaa-total{width:56px;flex:0 0 56px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Policy Brief Interactivo — Vivienda y Derechos Sociales</p>
+    <h1 class="title">España construye <em>diez veces</em> menos vivienda social que sus vecinos europeos.</h1>
+    <p class="lede">Un análisis comparado del parque de alquiler social en España frente a la Unión Europea, y de cómo se reparte —de forma muy desigual— entre comunidades autónomas. Parte del programa de investigación sobre gobernanza municipal de los derechos sociales de Silvia Talavera Lodos.</p>
+    <div class="hero-stats">
+      <div class="hstat"><span class="num">3,3%</span><span class="lab">del parque de hogares en España es alquiler social</span></div>
+      <div class="hstat"><span class="num">8,0%</span><span class="lab">media de la UE-27</span></div>
+      <div class="hstat"><span class="num">1,3</span><span class="lab">viviendas sociales por cada 100 habitantes (UE: 3,2)</span></div>
+      <div class="hstat"><span class="num">251.937</span><span class="lab">viviendas de titularidad autonómica en España, 2023</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="eu-compare">
+    <div class="section-head"><h2>España frente a Europa</h2></div>
+    <p class="section-sub">Porcentaje del parque de viviendas principales destinado a alquiler social, por país. España se sitúa muy por debajo de Países Bajos, Austria, Dinamarca o Francia — y también por debajo de la media comunitaria.</p>
+    <div class="controls">
+      <button class="seg-btn active" data-metric="pct">% sobre viviendas principales</button>
+      <button class="seg-btn" data-metric="per100">Viviendas por 100 habitantes</button>
+    </div>
+    <div class="chart-card" id="euChart"></div>
+    <div class="callout">España ocupa el puesto 13 de 27 en proporción de alquiler social, pero cae al furgón de cola en términos absolutos por habitante: solo 1,3 viviendas sociales por cada 100 habitantes, frente a las 11,5 de Países Bajos.</div>
+  </section>
+
+  <section id="ccaa">
+    <div class="section-head"><h2>El reparto interno: comunidades autónomas</h2></div>
+    <p class="section-sub">Parque de vivienda de titularidad autonómica en 2023, por régimen de tenencia. Haz clic en una barra para ver el detalle. Ordenado de mayor a menor parque total.</p>
+    <div class="controls">
+      <button class="seg-btn active" data-sort="total">Ordenar por total</button>
+      <button class="seg-btn" data-sort="name">Ordenar alfabéticamente</button>
+    </div>
+    <div class="chart-card" id="ccaaChart"></div>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--pine)"></i>Alquiler</span>
+      <span><i class="swatch" style="background:#5b7a63"></i>Alquiler con opción a compra</span>
+      <span><i class="swatch" style="background:var(--ochre)"></i>Destinado a la venta</span>
+      <span><i class="swatch" style="background:#b7a98a"></i>Otros regímenes</span>
+    </div>
+  </section>
+
+  <section id="data-table">
+    <div class="section-head"><h2>Tabla de datos</h2></div>
+    <p class="section-sub">Cifras completas por comunidad y ciudad autónoma. Filtra por nombre o haz clic en una columna para ordenar.</p>
+    <input type="text" class="search-input" id="tableSearch" placeholder="Filtrar por comunidad autónoma...">
+    <div style="overflow-x:auto;">
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th data-key="name">Comunidad / Ciudad Autónoma <span class="arrow">↕</span></th>
+            <th data-key="arrend">Alquiler <span class="arrow">↕</span></th>
+            <th data-key="opcion">Opción a compra <span class="arrow">↕</span></th>
+            <th data-key="venta">Venta <span class="arrow">↕</span></th>
+            <th data-key="otras">Otras <span class="arrow">↕</span></th>
+            <th data-key="total">Total <span class="arrow">↕</span></th>
+            <th data-key="pctArrend">% alquiler <span class="arrow">↕</span></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="method">
+    <div class="section-head"><h2>Lo que estos datos no muestran (todavía)</h2></div>
+    <p class="section-sub" style="max-width:100%;">
+      Este primer prototipo trabaja a escala autonómica porque es el nivel de máxima granularidad con series homogéneas y comparables para toda España. La mayoría de indicadores del Observatorio de Vivienda y Suelo se publican a nivel provincial o autonómico; solo un número reducido de series desciende a municipios de más de 50.000 habitantes. Las siguientes fases de este proyecto añadirán: (1) una capa municipal para las tres ciudades de la tesis doctoral — Turín, Barcelona y Atenas —, contrastándolas con el resto de capitales de provincia españolas; y (2) una capa temporal con los boletines trimestrales del Observatorio, para mostrar evolución en lugar de una foto fija.
+    </p>
+  </section>
+
+</main>
+
+<footer class="brief-foot">
+  <div class="wrap">
+    <h3>Fuentes de datos</h3>
+    <ul>
+      <li>Ministerio de Vivienda y Agenda Urbana, <em>Observatorio de Vivienda y Suelo — Boletín Especial Vivienda Social 2024</em> (enero 2025): parque de vivienda social por comunidad autónoma (Tabla 2.2) y comparativa europea (Tabla 2.1, con datos de Eurostat y Housing Europe).</li>
+      <li>Instituto Nacional de Estadística (INE), Encuesta de Condiciones de Vida 2023, base de la estimación española de alquiler social.</li>
+    </ul>
+    <h3>Metodología</h3>
+    <p>Las cifras autonómicas proceden de la Encuesta sobre vivienda social remitida en 2023 a comunidades autónomas y principales ayuntamientos; no incluyen el parque de titularidad municipal (aprox. 121.000 viviendas adicionales a nivel estatal, sin desglose territorial público). Las cifras europeas usan el Censo de Población y Vivienda 2011 de Eurostat para el parque total y datos de Housing Europe para el alquiler social; varios países no cuentan con dato de 2023 y se muestra el de 2017 (marcados en la fuente original).</p>
+    <p style="margin-top:24px;">Elaborado por Silvia Talavera Lodos · Parte del repositorio de investigación aplicada — <a href="https://linktr.ee/s.talaveralodos">linktr.ee/s.talaveralodos</a></p>
+  </div>
+</footer>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+// ===== DATA =====
+// Table 2.1 — EU comparison (Observatorio de Vivienda y Suelo, Boletín Especial Vivienda Social 2024)
+const euData = [
+  {c:"Países Bajos", pct:29.0, per100:11.5},
+  {c:"Austria", pct:24.0, per100:9.8},
+  {c:"Dinamarca", pct:20.0, per100:8.6},
+  {c:"Francia", pct:17.0, per100:7.0},
+  {c:"Suecia", pct:16.0, per100:6.1},
+  {c:"Finlandia", pct:11.0, per100:5.0},
+  {c:"Chequia", pct:9.4, per100:3.7},
+  {c:"Irlanda", pct:9.0, per100:2.9},
+  {c:"Polonia", pct:7.6, per100:2.6},
+  {c:"Bélgica", pct:6.0, per100:2.4},
+  {c:"Luxemburgo", pct:5.1, per100:1.6},
+  {c:"Eslovenia", pct:5.0, per100:1.6},
+  {c:"Alemania", pct:4.0, per100:1.8},
+  {c:"Italia", pct:3.5, per100:1.4},
+  {c:"España", pct:3.3, per100:1.3, es:true},
+  {c:"Hungría", pct:3.0, per100:1.2},
+  {c:"Eslovaquia", pct:3.0, per100:0.9},
+  {c:"Bulgaria", pct:2.5, per100:1.0},
+  {c:"Portugal", pct:2.0, per100:0.8},
+  {c:"Croacia", pct:1.8, per100:0.7},
+  {c:"Estonia", pct:1.7, per100:0.7},
+  {c:"Rumanía", pct:1.5, per100:0.6},
+  {c:"Chipre", pct:0.0, per100:0.0},
+  {c:"Grecia", pct:0.0, per100:0.0},
+  {c:"Letonia", pct:0.0, per100:0.0},
+  {c:"Lituania", pct:0.0, per100:0.0},
+  {c:"Malta", pct:0.0, per100:0.0},
+];
+const eu27 = {c:"UE-27 (media)", pct:8.0, per100:3.2};
+
+// Table 2.2 — Parque de vivienda de titularidad autonómica, 2023 (Encuesta sobre vivienda social 2023)
+const ccaaData = [
+  {name:"Andalucía", arrend:48834, opcion:0, venta:18522, otras:5708, total:73064},
+  {name:"País Vasco", arrend:31492, opcion:0, venta:318, otras:7596, total:39406},
+  {name:"Madrid (Comunidad de)", arrend:29327, opcion:4, venta:0, otras:289, total:29620},
+  {name:"Cataluña", arrend:17960, opcion:320, venta:0, otras:0, total:18280},
+  {name:"Canarias", arrend:14473, opcion:4940, venta:0, otras:0, total:19413},
+  {name:"Extremadura", arrend:12633, opcion:0, venta:0, otras:0, total:12633},
+  {name:"Comunitat Valenciana", arrend:11544, opcion:0, venta:2754, otras:0, total:14298},
+  {name:"Asturias (Principado de)", arrend:8817, opcion:0, venta:0, otras:0, total:8817},
+  {name:"Castilla-La Mancha", arrend:6801, opcion:1040, venta:440, otras:87, total:8368},
+  {name:"Galicia", arrend:3819, opcion:0, venta:7538, otras:199, total:11556},
+  {name:"Balears (Illes)", arrend:2362, opcion:0, venta:0, otras:0, total:2362},
+  {name:"Navarra (Comunidad Foral de)", arrend:2075, opcion:0, venta:0, otras:160, total:2235},
+  {name:"Murcia (Región de)", arrend:1736, opcion:103, venta:442, otras:90, total:2371},
+  {name:"Castilla y León", arrend:1842, opcion:0, venta:3510, otras:0, total:5352},
+  {name:"Melilla", arrend:1168, opcion:0, venta:0, otras:0, total:1168},
+  {name:"Ceuta", arrend:773, opcion:0, venta:511, otras:281, total:1565},
+  {name:"Aragón", arrend:610, opcion:0, venta:202, otras:0, total:812},
+  {name:"Rioja (La)", arrend:179, opcion:15, venta:21, otras:0, total:215},
+  {name:"Cantabria", arrend:397, opcion:5, venta:0, otras:0, total:402},
+];
+
+// ===== EU CHART =====
+const euChartEl = document.getElementById('euChart');
+let euMetric = 'pct';
+
+function renderEuChart(){
+  const max = euMetric==='pct' ? 29 : 11.5;
+  const rows = [...euData].sort((a,b)=>b[euMetric]-a[euMetric]);
+  let html = '';
+  rows.forEach(d=>{
+    const val = d[euMetric];
+    const w = (val/max*100).toFixed(1);
+    const label = euMetric==='pct' ? val.toFixed(1)+'%' : val.toFixed(1);
+    html += `<div class="eu-row ${d.es?'es':''}">
+      <div class="eu-label">${d.c}</div>
+      <div class="eu-bar-track"><div class="eu-bar-fill" style="width:${w}%"></div></div>
+      <div class="eu-val">${label}</div>
+    </div>`;
+  });
+  const eval_ = eu27[euMetric];
+  const ew = (eval_/max*100).toFixed(1);
+  const elabel = euMetric==='pct' ? eval_.toFixed(1)+'%' : eval_.toFixed(1);
+  html += `<div class="eu-row eu27">
+    <div class="eu-label">${eu27.c}</div>
+    <div class="eu-bar-track"><div class="eu-bar-fill" style="width:${ew}%;background:var(--muted);"></div></div>
+    <div class="eu-val">${elabel}</div>
+  </div>`;
+  euChartEl.innerHTML = html;
+}
+renderEuChart();
+document.querySelectorAll('[data-metric]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('[data-metric]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    euMetric = btn.dataset.metric;
+    renderEuChart();
+  });
+});
+
+// ===== CCAA CHART =====
+const ccaaChartEl = document.getElementById('ccaaChart');
+const tooltip = document.getElementById('tooltip');
+let ccaaSort = 'total';
+
+function renderCcaaChart(){
+  const maxTotal = Math.max(...ccaaData.map(d=>d.total));
+  const rows = [...ccaaData].sort((a,b)=>{
+    if(ccaaSort==='total') return b.total-a.total;
+    return a.name.localeCompare(b.name,'es');
+  });
+  let html = '';
+  rows.forEach(d=>{
+    const scale = 100/maxTotal;
+    const wA = (d.arrend*scale).toFixed(2);
+    const wO = (d.opcion*scale).toFixed(2);
+    const wV = (d.venta*scale).toFixed(2);
+    const wOt = (d.otras*scale).toFixed(2);
+    html += `<div class="ccaa-row" data-name="${d.name}" data-arrend="${d.arrend}" data-opcion="${d.opcion}" data-venta="${d.venta}" data-otras="${d.otras}" data-total="${d.total}">
+      <div class="ccaa-label">${d.name}</div>
+      <div class="ccaa-bar-track">
+        <div class="seg arrend" style="width:${wA}%"></div>
+        <div class="seg opcion" style="width:${wO}%"></div>
+        <div class="seg venta" style="width:${wV}%"></div>
+        <div class="seg otras" style="width:${wOt}%"></div>
+      </div>
+      <div class="ccaa-total">${d.total.toLocaleString('es-ES')}</div>
+    </div>`;
+  });
+  ccaaChartEl.innerHTML = html;
+
+  document.querySelectorAll('.ccaa-row').forEach(row=>{
+    row.addEventListener('mousemove', (e)=>{
+      const d = row.dataset;
+      const pctArrend = ((+d.arrend/+d.total)*100).toFixed(0);
+      tooltip.innerHTML = `<strong>${d.name}</strong><br>
+        Alquiler: ${(+d.arrend).toLocaleString('es-ES')} (${pctArrend}%)<br>
+        Opción a compra: ${(+d.opcion).toLocaleString('es-ES')}<br>
+        Venta: ${(+d.venta).toLocaleString('es-ES')}<br>
+        Otras: ${(+d.otras).toLocaleString('es-ES')}<br>
+        <strong>Total: ${(+d.total).toLocaleString('es-ES')}</strong>`;
+      tooltip.style.left = (e.clientX+16)+'px';
+      tooltip.style.top = (e.clientY+16)+'px';
+      tooltip.style.opacity = 1;
+    });
+    row.addEventListener('mouseleave', ()=>{ tooltip.style.opacity = 0; });
+  });
+}
+renderCcaaChart();
+document.querySelectorAll('[data-sort]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('[data-sort]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    ccaaSort = btn.dataset.sort;
+    renderCcaaChart();
+  });
+});
+
+// ===== TABLE =====
+const tableBody = document.getElementById('tableBody');
+let tableSortKey = 'total';
+let tableSortDir = -1;
+let searchTerm = '';
+
+function renderTable(){
+  let rows = ccaaData.map(d=>({...d, pctArrend: +( (d.arrend/d.total)*100 ).toFixed(1)}));
+  if(searchTerm){
+    rows = rows.filter(d=>d.name.toLowerCase().includes(searchTerm));
+  }
+  rows.sort((a,b)=>{
+    if(tableSortKey==='name') return a.name.localeCompare(b.name,'es')*tableSortDir*-1;
+    return (a[tableSortKey]-b[tableSortKey])*tableSortDir;
+  });
+  tableBody.innerHTML = rows.map(d=>`
+    <tr>
+      <td class="name">${d.name}</td>
+      <td>${d.arrend.toLocaleString('es-ES')}</td>
+      <td>${d.opcion.toLocaleString('es-ES')}</td>
+      <td>${d.venta.toLocaleString('es-ES')}</td>
+      <td>${d.otras.toLocaleString('es-ES')}</td>
+      <td>${d.total.toLocaleString('es-ES')}</td>
+      <td>${d.pctArrend}%</td>
+    </tr>
+  `).join('');
+}
+renderTable();
+
+document.querySelectorAll('#dataTable th').forEach(th=>{
+  th.addEventListener('click', ()=>{
+    const key = th.dataset.key;
+    if(tableSortKey===key){ tableSortDir *= -1; } else { tableSortKey = key; tableSortDir = -1; }
+    renderTable();
+  });
+});
+document.getElementById('tableSearch').addEventListener('input', (e)=>{
+  searchTerm = e.target.value.toLowerCase();
+  renderTable();
+});
+</script>
+
+</body>
+</html>
